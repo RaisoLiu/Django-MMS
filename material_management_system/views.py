@@ -1,3 +1,6 @@
+import random
+import string
+
 from django.shortcuts import render, redirect
 from .filters import *
 from .models import *
@@ -33,18 +36,18 @@ def new_item(request):
 
 def update_item(request, pk):
     item = Item.objects.get(id=pk)
-    formset = ItemForm(instance=item)
+    form = ItemForm(instance=item)
     info = str()
     if request.method == 'POST':
-        formset = ItemForm(request.POST, instance=item)
-        if formset.is_valid():
-            formset.save()
+        form = ItemForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
             return redirect('/')
         else:
             print('data is not valid.')
             info = 'data is not valid.'
 
-    context = {'form': formset, 'info': info}
+    context = {'form': form, 'info': info}
     return render(request, 'new_item.html', context)
 
 
@@ -59,7 +62,46 @@ def delete_item(request, pk):
 
 
 def new_material(request, pk):
-    return render(request, 'non_development.html')
+    item = Item.objects.get(id=pk)
+    is_group = 1 if item.is_group == 'YES' else 0
+    info = ""
+    if request.method == 'POST':
+        form = NewGroupMaterialForm(request.POST) if is_group else NewSplitMaterialForm(request.POST)
+        if is_group:
+            n = int(form['count_per_group'].value())
+            g = int(form['group_count'].value())
+            p = float(form['price_per_unit'].value())
+            item.add_material(n * g)
+            material_dict = {
+                'item': item,
+                'count': g,
+                'unit_price': p,
+            }
+            for i in range(n):
+                material_dict['random_str'] = ''.join(random.choice(string.ascii_uppercase) for x in range(6))
+                material = MaterialForm(initial=material_dict)
+                if material.is_valid():
+                    material.save()
+            item.save()
+        else:
+            n = int(form['count'].value())
+            p = float(form['price_per_unit'].value())
+            item.add_material(n)
+            material_dict = {
+                'item': item,
+                'random_str': ''.join(random.choice(string.ascii_uppercase) for x in range(6)),
+                'count': n,
+                'unit_price': p,
+            }
+            material = MaterialForm(initial=material_dict)
+            if material.is_valid():
+                material.save()
+            item.save()
+        return redirect('/')
+
+    form = NewGroupMaterialForm() if is_group else NewSplitMaterialForm()
+    context = {'item': item, 'form': form, 'info': info}
+    return render(request, 'new_material.html', context)
 
 
 def remaining_material(request):

@@ -11,6 +11,11 @@ class Project(models.Model):
 
 
 class Item(models.Model):
+    GROUP_STATUS = (
+        ('YES', 'YES'),
+        ('NO', 'NO'),
+    )
+
     lib_ref = models.CharField(max_length=200, blank=True)
     ds_number = models.CharField(max_length=200,unique=True)
     part_number = models.CharField(max_length=200, null=True, blank=True)
@@ -18,24 +23,33 @@ class Item(models.Model):
     expected_count = models.IntegerField(null=True)
     feature = models.TextField(blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    free_count = 0
-    unavailable_count = 0
+    free_count = models.IntegerField(default=0)
+    unavailable_count = models.IntegerField(default=0)
+    is_group = models.CharField(max_length=5, choices=GROUP_STATUS, default='YES')
 
     def __str__(self):
         return self.lib_ref
 
+    def add_material(self, val):
+        self.free_count += val
+        return
+
 
 class Material(models.Model):
-    item_name = models.CharField(max_length=200, blank=True)
+
     item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True)
     random_str = models.CharField(max_length=20)
-    is_group = models.CharField(max_length=5)
-    price = models.FloatField()
+    unit_price = models.FloatField()
+    count = models.IntegerField(default=0)
     status = models.CharField(max_length=200, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
+    def __init__(self):
+        print('new material')
+        return
+
     def __str__(self):
-        return self.item_name + self.random_str
+        return str(self.item) + self.random_str
 
 
 class BOM(models.Model):
