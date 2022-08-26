@@ -58,30 +58,29 @@ def delete_item(request, pk):
     return render(request, 'delete.html', context)
 
 
-
 def new_material(request, pk):
-    return None
+    return render(request, 'non_development.html')
 
 
 def remaining_material(request):
-    return None
+    return render(request, 'non_development.html')
 
 
 def project_search(request):
-    return None
+    return render(request, 'non_development.html')
 
 
 def new_project(request):
-    return None
+    return render(request, 'non_development.html')
 
 
 def new_bom(request):
-    return None
+    return render(request, 'non_development.html')
 
 
 def update_material(request):
-    return None
+    return render(request, 'non_development.html')
 
 
 def item_detail(request, pk):
-    return None
+    return render(request, 'non_development.html')
