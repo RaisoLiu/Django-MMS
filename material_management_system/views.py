@@ -74,14 +74,13 @@ def new_material(request, pk):
             item.add_material(n * g)
             material_dict = {
                 'item': item,
-                'count': g,
+                'count': n,
                 'unit_price': p,
             }
-            for i in range(n):
+            for i in range(g):
                 material_dict['random_str'] = ''.join(random.choice(string.ascii_uppercase) for x in range(6))
-                material = MaterialForm(initial=material_dict)
-                if material.is_valid():
-                    material.save()
+                material = Material(**material_dict)
+                material.save()
             item.save()
         else:
             n = int(form['count'].value())
@@ -93,15 +92,29 @@ def new_material(request, pk):
                 'count': n,
                 'unit_price': p,
             }
-            material = MaterialForm(initial=material_dict)
-            if material.is_valid():
-                material.save()
+            material = Material(initial=material_dict)
+            material.save()
             item.save()
         return redirect('/')
 
     form = NewGroupMaterialForm() if is_group else NewSplitMaterialForm()
     context = {'item': item, 'form': form, 'info': info}
     return render(request, 'new_material.html', context)
+
+
+def update_material(request, pk):
+    return render(request, 'non_development.html')
+
+
+def delete_material(request, pk):
+    return None
+
+
+def item_detail(request, pk):
+    item = Item.objects.get(id=pk)
+    material_set = item.material_set.all()
+    context = {'material_set': material_set, 'item': item}
+    return render(request, 'item_detail.html', context)
 
 
 def remaining_material(request):
@@ -120,9 +133,5 @@ def new_bom(request):
     return render(request, 'non_development.html')
 
 
-def update_material(request):
-    return render(request, 'non_development.html')
-
-
-def item_detail(request, pk):
+def material_detail_search(request):
     return render(request, 'non_development.html')

@@ -44,12 +44,8 @@ class Material(models.Model):
     status = models.CharField(max_length=200, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
-    def __init__(self):
-        print('new material')
-        return
-
     def __str__(self):
-        return str(self.item) + self.random_str
+        return str(self.item) + ' ' + self.random_str
 
 
 class BOM(models.Model):

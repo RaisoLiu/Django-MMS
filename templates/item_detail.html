@@ -1,0 +1,76 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>材料品項</h5>
+            <p> {{item.lib_ref}}</p>
+			<hr>
+{#			<a class="btn btn-outline-info  btn-sm btn-block" href="">Update Customer</a>#}
+{#			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'create_order' customer.id %}">Place Order</a>#}
+
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Information</h5>
+			<hr>
+			<p> {{item.feature}}</p>
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>可用材料</h5>
+			<hr>
+			<h1 style="text-align: center;padding: 10px">{{item.free_count}}</h1>
+		</div>
+
+	</div>
+    <div class="col-md">
+        <div class="card card-body">
+			<h5>不可用材料</h5>
+			<hr>
+			<h1 style="text-align: center;padding: 10px">{{item.unavailable_count}}</h1>
+		</div>
+    </div>
+</div>
+
+
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>材料編號</th>
+					<th>單價</th>
+					<th>可用數量</th>
+					<th>進貨日期</th>
+					<th>Update</th>
+					<th>Remove</th>
+				</tr>
+
+				{% for material in material_set %}
+
+				<tr>
+					<td>{{material}}</td>
+					<td>{{material.unit_price}}</td>
+					<td>{{material.count}}</td>
+					<td>{{material.date_created}}</td>
+					<td><a class="btn btn-sm btn-info" href="{% url 'update_material' material.id %}">Update</a></td>
+
+					<td><a class="btn btn-sm btn-danger" href="{% url 'delete_material' material.id %}">Delete</a></td>
+				</tr>
+				{% endfor %}
+
+			</table>
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}
