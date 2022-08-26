@@ -11,7 +11,7 @@ def material_search(request):
     qs = Item.objects.all()
     itemFilter = ItemFilterTermFreq(request.GET, queryset=qs)
     qs = itemFilter.qs
-    n = min(len(qs), 10)
+    n = min(len(qs), 15)
     qs = qs[:n]
     context = {'item_set': qs, 'itemFilter': itemFilter}
     return render(request, 'material_search.html', context)
@@ -58,7 +58,7 @@ def delete_item(request, pk):
         return redirect('/')
 
     context = {'item': item}
-    return render(request, 'delete.html', context)
+    return render(request, 'delete_item.html', context)
 
 
 def new_material(request, pk):
@@ -92,7 +92,7 @@ def new_material(request, pk):
                 'count': n,
                 'unit_price': p,
             }
-            material = Material(initial=material_dict)
+            material = Material(**material_dict)
             material.save()
             item.save()
         return redirect('/')
@@ -103,11 +103,38 @@ def new_material(request, pk):
 
 
 def update_material(request, pk):
-    return render(request, 'non_development.html')
+    material = Material.objects.get(id=pk)
+    item = material.item
+    form = MaterialForm(instance=material)
+    info = str()
+    if request.method == 'POST':
+        ori = material.count
+        form = MaterialForm(request.POST, instance=material)
+        if form.is_valid():
+            form.save()
+            item.add_material(Material.objects.get(id=pk).count - ori)
+            item.save()
+            return redirect('/item_detail/' + str(item.id))
+
+        else:
+            print('data is not valid.')
+            info = 'data is not valid.'
+
+    context = {'form': form, 'info': info}
+    return render(request, 'update_material.html', context)
 
 
 def delete_material(request, pk):
-    return None
+    material = Material.objects.get(id=pk)
+    item = material.item
+    if request.method == "POST":
+        item.add_material(-material.count)
+        item.save()
+        material.delete()
+        return redirect('/item_detail/' + str(item.id))
+
+    context = {'material': material, 'item': item}
+    return render(request, 'delete_material.html', context)
 
 
 def item_detail(request, pk):

@@ -11,7 +11,7 @@ class Project(models.Model):
 
 
 class Item(models.Model):
-    GROUP_STATUS = (
+    STATUS = (
         ('YES', 'YES'),
         ('NO', 'NO'),
     )
@@ -25,7 +25,7 @@ class Item(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     free_count = models.IntegerField(default=0)
     unavailable_count = models.IntegerField(default=0)
-    is_group = models.CharField(max_length=5, choices=GROUP_STATUS, default='YES')
+    is_group = models.CharField(max_length=5, choices=STATUS, default='YES')
 
     def __str__(self):
         return self.lib_ref
@@ -36,12 +36,15 @@ class Item(models.Model):
 
 
 class Material(models.Model):
-
+    STATUS = (
+        ('YES', 'YES'),
+        ('NO', 'NO'),
+    )
     item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True)
     random_str = models.CharField(max_length=20)
     unit_price = models.FloatField()
     count = models.IntegerField(default=0)
-    status = models.CharField(max_length=200, null=True)
+    is_free = models.CharField(max_length=5, default='YES', choices=STATUS)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
