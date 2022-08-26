@@ -1,0 +1,59 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<br>
+
+{#<div class="row">#}
+{#    <div class="col">#}
+{#        <div class="card card-body">#}
+{#            <form method="get">#}
+{#                {{ itemFilter.form }}#}
+{##}
+{#                <button class="btn btn-primary" type="submit">Search</button>#}
+{#            </form>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+<form method="get">
+    <div class="card card-body">
+        <div class="input-group rounded">
+          <input name={{ itemFilter.form.feature.name }} id={{ itemFilter.form.feature.id_for_label }} type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+        </div>
+    </div>
+</form>
+
+<div class="card card-body">
+        <table class="table table-sm">
+            <tr>
+                <th>新料入庫</th>
+                <th>材料詳情</th>
+                <th>Lib Ref</th>
+                <th>Free Count</th>
+                <th>Unavailable Count</th>
+                <th>Location</th>
+                <th>材料品項更新</th>
+                <th>材料品項刪除</th>
+            </tr>
+            {% for it in item_set %}
+                <tr>
+                    <td><a class="btn btn-sm btn-info" href="{% url 'new_material' it.id %}">新料入庫</a></td>
+                    <td><a class="btn btn-sm btn-info" href="{% url 'item_detail' it.id %}">Detail</a></td>
+                    <td>{{ it.lib_ref }}</td>
+                    <td>{{ it.free_count }}</td>
+                    <td>{{ it.unavailable_count }}</td>
+                    <td>{{ it.location }}</td>
+                    <td><a class="btn btn-sm btn-warning" href="{% url 'update_item' it.id %}">Update</a></td>
+                    <td><a class="btn btn-sm btn-danger" href="{% url 'delete_item' it.id %}">Delete</a></td>
+                </tr>
+            {% endfor %}
+
+
+        </table>
+    </div>
+
+
+<br>
+
+
+{% endblock %}

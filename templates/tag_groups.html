@@ -1,0 +1,33 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+    <br>
+
+    <div class="row">
+        <div class="col-md">
+            <div class="card card-body">
+                <h5>特徵集合</h5>
+            </div>
+            <div class="card card-body">
+            <a class="btn btn-primary  btn-sm btn-block" href="{% url 'create_tag_group' %}">Create 特徵集合</a>
+                <table class="table">
+                    <tr>
+                        <th>name</th>
+                        <th>has_value</th>
+                        <th>date_created</th>
+                    </tr>
+						{% for i in tag_groups %}
+							<tr>
+								<td>{{i.name}}</td>
+								<td>{{i.has_value}}</td>
+								<td>{{i.date_created}}</td>
+							</tr>
+						{% endfor %}
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
