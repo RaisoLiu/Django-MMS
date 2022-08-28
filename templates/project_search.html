@@ -1,0 +1,39 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<br>
+
+
+<div class="card card-body">
+        <table class="table table-sm">
+            <tr>
+                <th>專案名稱</th>
+                <th>PM</th>
+                <th>建立日期</th>
+                <th>成本</th>
+                <th>專案詳情</th>
+                <th>專案更新</th>
+                <th>專案刪除</th>
+            </tr>
+            {% for it in project_set %}
+                <tr>
+                    <td>{{ it.name }}</td>
+                    <td>{{ it.user_created }}</td>
+                    <td>{{ it.date_created }}</td>
+                    <td>{{ it.total_cost }}</td>
+                    <td><a class="btn btn-sm btn-info" href="{% url 'project_detail' it.id %}">Detail</a></td>
+                    <td><a class="btn btn-sm btn-warning" href="{% url 'update_project' it.id %}">Update</a></td>
+                    <td><a class="btn btn-sm btn-danger" href="{% url 'delete_project' it.id %}">Delete</a></td>
+                </tr>
+            {% endfor %}
+
+
+        </table>
+    </div>
+
+
+<br>
+
+
+{% endblock %}

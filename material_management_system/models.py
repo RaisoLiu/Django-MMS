@@ -4,6 +4,8 @@ from django.db import models
 class Project(models.Model):
     name = models.CharField(max_length=200, blank=True)
     user_created = models.CharField(max_length=200, null=True)
+    description = models.TextField(blank=True, null=True)
+    total_cost = models.FloatField(default=.0)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -55,6 +57,7 @@ class BOM(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     description = models.CharField(max_length=200, blank=True)
     material = models.ManyToManyField(Material)
+    cost = models.FloatField(default=.0)
 
     def __str__(self):
         return str(self.project) + str(self.description)

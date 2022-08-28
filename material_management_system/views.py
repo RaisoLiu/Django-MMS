@@ -149,16 +149,71 @@ def remaining_material(request):
 
 
 def project_search(request):
-    return render(request, 'non_development.html')
+    qs = Project.objects.all()
+    n = min(len(qs), 15)
+    qs = qs[:n]
+    context = {'project_set': qs}
+    return render(request, 'project_search.html', context)
 
 
 def new_project(request):
-    return render(request, 'non_development.html')
+    project_set = ProjectForm()
+    info = str()
+    if request.method == 'POST':
+        project_set = ProjectForm(request.POST)
+        if project_set.is_valid():
+            project_set.save()
+            return redirect('/project_search')
+        else:
+            print('data is not valid.')
+            info = 'data is not valid.'
+
+    context = {'form': project_set, 'info': info}
+
+    return render(request, 'new_project.html', context)
 
 
-def new_bom(request):
+def new_bom(request, pk):
     return render(request, 'non_development.html')
 
 
 def material_detail_search(request):
     return render(request, 'non_development.html')
+
+
+def materials_price(request):
+    return None
+
+
+def update_project(request, pk):
+    project = Project.objects.get(id=pk)
+    form = ProjectForm(instance=project)
+    info = str()
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, instance=project)
+        if form.is_valid():
+            form.save()
+            return redirect('/project_search')
+        else:
+            print('data is not valid.')
+            info = 'data is not valid.'
+
+    context = {'form': form, 'info': info}
+    return render(request, 'new_project.html', context)
+
+
+def delete_project(request, pk):
+    project = Project.objects.get(id=pk)
+    if request.method == "POST":
+        project.delete()
+        return redirect('/project_search')
+
+    context = {'item': project}
+    return render(request, 'delete_project.html', context)
+
+
+def project_detail(request, pk):
+    project = Project.objects.get(id=pk)
+    bom_set = project.bom_set.all()
+    context = {'bom_set': bom_set, 'project': project}
+    return render(request, 'project_detail.html', context)

@@ -24,7 +24,7 @@ class MaterialForm(ModelForm):
 
 class NewGroupMaterialForm(forms.Form):
     count_per_group = forms.IntegerField(label="每組個數")
-    group_count = forms.IntegerField(label="進貨組數")
+    group_count = forms.IntegerField(label="進貨組數", max_value=30)
     price_per_unit = forms.FloatField(label="單價")
     #
     # class Meta:
@@ -34,6 +34,13 @@ class NewGroupMaterialForm(forms.Form):
 class NewSplitMaterialForm(forms.Form):
     count = forms.IntegerField(label="每組個數")
     price_per_unit = forms.FloatField(label="單價")
-    #
-    # class Meta:
-    #     fields = ['count', 'price_per_unit']
+
+
+class ProjectForm(ModelForm):
+    name = forms.CharField(label="專案名稱")
+    user_created = forms.CharField(label="PM")
+
+    class Meta:
+        model = Project
+        fields = '__all__'
+        exclude = ['total_cost', 'date_created']
