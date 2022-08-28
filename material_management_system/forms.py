@@ -44,3 +44,11 @@ class ProjectForm(ModelForm):
         model = Project
         fields = '__all__'
         exclude = ['total_cost', 'date_created']
+
+
+class BOMForm(ModelForm):
+
+    class Meta:
+        model = BOM
+        fields = '__all__'
+        exclude = ['cost', 'date_created']

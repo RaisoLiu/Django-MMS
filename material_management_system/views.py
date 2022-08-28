@@ -157,24 +157,38 @@ def project_search(request):
 
 
 def new_project(request):
-    project_set = ProjectForm()
+    project_form = ProjectForm()
     info = str()
     if request.method == 'POST':
-        project_set = ProjectForm(request.POST)
-        if project_set.is_valid():
-            project_set.save()
+        project_form = ProjectForm(request.POST)
+        if project_form.is_valid():
+            project_form.save()
             return redirect('/project_search')
         else:
             print('data is not valid.')
             info = 'data is not valid.'
 
-    context = {'form': project_set, 'info': info}
+    context = {'form': project_form, 'info': info}
 
     return render(request, 'new_project.html', context)
 
 
 def new_bom(request, pk):
-    return render(request, 'non_development.html')
+    project = Project.objects.get(id=pk)
+    bom_form = BOMForm(initial={'project': project})
+    info = str()
+    if request.method == 'POST':
+        bom_form = BOMForm(request.POST)
+        if bom_form.is_valid():
+            bom_form.save()
+            return redirect('/project_detail/'+str(pk))
+        else:
+            print('data is not valid.')
+            info = 'data is not valid.'
+
+    context = {'form': bom_form, 'info': info}
+
+    return render(request, 'new_bom.html', context)
 
 
 def material_detail_search(request):
@@ -182,7 +196,7 @@ def material_detail_search(request):
 
 
 def materials_price(request):
-    return None
+    return render(request, 'non_development.html')
 
 
 def update_project(request, pk):

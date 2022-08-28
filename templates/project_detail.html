@@ -47,10 +47,10 @@
 		<div class="card card-body">
 			<table class="table table-sm">
 				<tr>
-					<th>材料編號</th>
-					<th>單價</th>
-					<th>可用數量</th>
-					<th>進貨日期</th>
+					<th>BOM描述</th>
+					<th>成本</th>
+					<th>建立日期</th>
+                    <th>Detail</th>
 					<th>Update</th>
 					<th>Remove</th>
 				</tr>
@@ -58,12 +58,11 @@
 				{% for bom in bom_set %}
 
 				<tr>
-					<td>{{bom}}</td>
 					<td>{{bom.description}}</td>
 					<td>{{bom.cost}}</td>
-{#					<td>{{bom.material.all}}</td>#}
+                    <td>{{bom.date_created}}</td>
+                    <td><a class="btn btn-sm btn-info" href="">Detail</a></td>
 					<td><a class="btn btn-sm btn-warning" href="">Update</a></td>
-
 					<td><a class="btn btn-sm btn-danger" href="">Delete</a></td>
 				</tr>
 				{% endfor %}
