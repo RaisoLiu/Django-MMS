@@ -1,12 +1,43 @@
 import random
 import string
 
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .filters import *
 from .models import *
 from .forms import *
 
 
+def loginPage(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    else:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return redirect('/')
+            else:
+                messages.info(request, 'Username OR password is incorrect')
+
+        context = {}
+        return render(request, 'login.html', context)
+
+
+
+@login_required(login_url='login')
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
+
+
+@login_required(login_url='login')
 def material_search(request):
     qs = Item.objects.all()
     itemFilter = ItemFilterTermFreq(request.GET, queryset=qs)
@@ -17,6 +48,7 @@ def material_search(request):
     return render(request, 'material_search.html', context)
 
 
+@login_required(login_url='login')
 def new_item(request):
     formset = ItemForm()
     info = str()
@@ -34,6 +66,7 @@ def new_item(request):
     return render(request, 'new_item.html', context)
 
 
+@login_required(login_url='login')
 def update_item(request, pk):
     item = Item.objects.get(id=pk)
     form = ItemForm(instance=item)
@@ -51,6 +84,7 @@ def update_item(request, pk):
     return render(request, 'new_item.html', context)
 
 
+@login_required(login_url='login')
 def delete_item(request, pk):
     item = Item.objects.get(id=pk)
     if request.method == "POST":
@@ -61,6 +95,7 @@ def delete_item(request, pk):
     return render(request, 'delete_item.html', context)
 
 
+@login_required(login_url='login')
 def new_material(request, pk):
     item = Item.objects.get(id=pk)
     is_group = 1 if item.is_group == 'YES' else 0
@@ -102,6 +137,7 @@ def new_material(request, pk):
     return render(request, 'new_material.html', context)
 
 
+@login_required(login_url='login')
 def update_material(request, pk):
     material = Material.objects.get(id=pk)
     item = material.item
@@ -124,6 +160,7 @@ def update_material(request, pk):
     return render(request, 'update_material.html', context)
 
 
+@login_required(login_url='login')
 def delete_material(request, pk):
     material = Material.objects.get(id=pk)
     item = material.item
@@ -137,6 +174,7 @@ def delete_material(request, pk):
     return render(request, 'delete_material.html', context)
 
 
+@login_required(login_url='login')
 def item_detail(request, pk):
     item = Item.objects.get(id=pk)
     material_set = item.material_set.all()
@@ -144,10 +182,12 @@ def item_detail(request, pk):
     return render(request, 'item_detail.html', context)
 
 
+@login_required(login_url='login')
 def remaining_material(request):
     return render(request, 'non_development.html')
 
 
+@login_required(login_url='login')
 def project_search(request):
     qs = Project.objects.all()
     n = min(len(qs), 15)
@@ -156,6 +196,7 @@ def project_search(request):
     return render(request, 'project_search.html', context)
 
 
+@login_required(login_url='login')
 def new_project(request):
     project_form = ProjectForm()
     info = str()
@@ -173,6 +214,7 @@ def new_project(request):
     return render(request, 'new_project.html', context)
 
 
+@login_required(login_url='login')
 def new_bom(request, pk):
     project = Project.objects.get(id=pk)
     bom_form = BOMForm(initial={'project': project})
@@ -181,7 +223,7 @@ def new_bom(request, pk):
         bom_form = BOMForm(request.POST)
         if bom_form.is_valid():
             bom_form.save()
-            return redirect('/project_detail/'+str(pk))
+            return redirect('/project_detail/' + str(pk))
         else:
             print('data is not valid.')
             info = 'data is not valid.'
@@ -191,14 +233,17 @@ def new_bom(request, pk):
     return render(request, 'new_bom.html', context)
 
 
+@login_required(login_url='login')
 def material_detail_search(request):
     return render(request, 'non_development.html')
 
 
+@login_required(login_url='login')
 def materials_price(request):
     return render(request, 'non_development.html')
 
 
+@login_required(login_url='login')
 def update_project(request, pk):
     project = Project.objects.get(id=pk)
     form = ProjectForm(instance=project)
@@ -216,6 +261,7 @@ def update_project(request, pk):
     return render(request, 'new_project.html', context)
 
 
+@login_required(login_url='login')
 def delete_project(request, pk):
     project = Project.objects.get(id=pk)
     if request.method == "POST":
@@ -226,6 +272,7 @@ def delete_project(request, pk):
     return render(request, 'delete_project.html', context)
 
 
+@login_required(login_url='login')
 def project_detail(request, pk):
     project = Project.objects.get(id=pk)
     bom_set = project.bom_set.all()

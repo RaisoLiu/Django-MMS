@@ -19,6 +19,8 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('login/', views.loginPage, name="login"),
+    path('logout/', views.logoutUser, name="logout"),
     path('', views.material_search, name="material_search"),
     path('material_detail_search/', views.material_detail_search, name="material_detail_search"),
     path('materials_price/', views.materials_price, name="materials_price"),
