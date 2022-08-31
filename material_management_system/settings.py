@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'material_management_system',
     'django_filters',
+    # 'django_extensions',
 ]
 
 MIDDLEWARE = [

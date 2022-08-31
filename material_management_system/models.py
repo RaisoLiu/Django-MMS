@@ -18,9 +18,11 @@ class Item(models.Model):
         ('NO', 'NO'),
     )
 
-    lib_ref = models.CharField(max_length=200, blank=True)
-    ds_number = models.CharField(max_length=200,unique=True)
-    part_number = models.CharField(max_length=200, null=True, blank=True)
+    lib_ref = models.CharField(max_length=50, blank=True)
+    ds_number = models.CharField(max_length=20, unique=True)
+    part_number = models.CharField(max_length=50, null=True, blank=True)
+    # manufacturer = models.CharField(max_length=50, null=True, blank=True)
+    # footprint = models.CharField(max_length=20, null=True, blank=True)
     location = models.CharField(max_length=200, null=True, blank=True)
     expected_count = models.IntegerField(null=True)
     feature = models.TextField(blank=True, null=True)
@@ -48,6 +50,9 @@ class Material(models.Model):
     count = models.IntegerField(default=0)
     is_free = models.CharField(max_length=5, default='YES', choices=STATUS)
     date_created = models.DateTimeField(auto_now_add=True)
+
+    # def __init__(self):
+    #     self.item.add_material(self.count)
 
     def __str__(self):
         return str(self.item) + ' ' + self.random_str

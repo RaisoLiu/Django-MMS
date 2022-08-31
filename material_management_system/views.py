@@ -12,7 +12,7 @@ def material_search(request):
     itemFilter = ItemFilterTermFreq(request.GET, queryset=qs)
     qs = itemFilter.qs
     n = min(len(qs), 15)
-    qs = qs[:n]
+    # qs = qs[:n]
     context = {'item_set': qs, 'itemFilter': itemFilter}
     return render(request, 'material_search.html', context)
 

@@ -27,19 +27,25 @@
         <table class="table table-sm">
             <tr>
                 <th>新料入庫</th>
-                <th>材料詳情</th>
+                <th>庫存詳情</th>
                 <th>Lib Ref</th>
-                <th>Free Count</th>
-                <th>Unavailable Count</th>
+                <th>DS Number</th>
+{#                <th>Manufacturer</th>#}
+{#                <th>Footprint</th>#}
+                <th>庫存</th>
+                <th>預估餘料</th>
                 <th>Location</th>
-                <th>材料品項更新</th>
-                <th>材料品項刪除</th>
+                <th>Update</th>
+                <th>Delete</th>
             </tr>
             {% for it in item_set %}
                 <tr>
-                    <td><a class="btn btn-sm btn-info" href="{% url 'new_material' it.id %}">新料入庫</a></td>
+                    <td><a class="btn btn-sm btn-info" href="{% url 'new_material' it.id %}">ADD</a></td>
                     <td><a class="btn btn-sm btn-info" href="{% url 'item_detail' it.id %}">Detail</a></td>
                     <td>{{ it.lib_ref }}</td>
+                    <td>{{ it.ds_number }}</td>
+{#                    <td>{{ it.manufacturer }}</td>#}
+{#                    <td>{{ it.footprint }}</td>#}
                     <td>{{ it.free_count }}</td>
                     <td>{{ it.unavailable_count }}</td>
                     <td>{{ it.location }}</td>
