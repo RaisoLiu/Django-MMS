@@ -1,6 +1,9 @@
 import random
 import string
 
+import numpy as np
+import openpyxl
+import pandas as pd
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -240,7 +243,28 @@ def material_detail_search(request):
 
 @login_required(login_url='login')
 def materials_price(request):
-    return render(request, 'non_development.html')
+    context = {}
+    if request.method == 'POST':
+        excel_file = request.FILES["excel_file"]
+
+        print(excel_file, type(excel_file))
+        df = pd.read_excel(excel_file, skiprows=8, skipfooter=2)
+        libref_li = np.array(df['LibRef'])
+        ds_number_li = np.array(df['PartNumber'])
+        quantity_li = np.array(df['Quantity'])
+        no_li = np.array(df['#'])
+        mat_set = []
+        for i in range(len(libref_li)):
+            it = dict()
+            it['lib_ref'] = libref_li[i]
+            it['ds_number'] = ds_number_li[i]
+            it['quantity'] = quantity_li[i]
+            it['no'] = no_li[i]
+            mat_set.append(it)
+
+        context["mat_set"] = mat_set
+        print(len(context["mat_set"]))
+    return render(request, 'materials_price.html', context)
 
 
 @login_required(login_url='login')

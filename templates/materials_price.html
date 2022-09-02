@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<br>
+
+<div class="row">
+    <div class="col-md">
+        <div class="card card-body">
+            <form action="{% url "materials_price" %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file"
+            title="Upload excel file"
+            name="excel_file"
+            class="form-control"
+            style="border: 1px solid black; padding: 5px;"
+            required="required">
+
+            <p></p>
+
+            <input type="submit"
+            value="Upload"
+            style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+            </form>
+        </div>
+    </div>
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>查無材料品項數量</h5>
+			<hr>
+			<p>3</p>
+		</div>
+	</div>
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>已知品項估計總價</h5>
+			<hr>
+			<p>3000</p>
+		</div>
+	</div>
+</div>
+
+
+
+
+<div class="card card-body">
+        <table class="table table-sm">
+            <tr class="table-active">
+                <th>#</th>
+                <th>Lib Ref</th>
+                <th>DS Number</th>
+{#                <th>Manufacturer</th>#}
+{#                <th>Footprint</th>#}
+                <th>需求</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+
+         {% for it in mat_set %}
+                <tr class="table-danger">
+                    <td> {{ it.no }}</td>
+                    <td>{{ it.lib_ref }}</td>
+                    <td>{{ it.ds_number }}</td>
+                    <td>{{ it.quantity }}</td>
+                    <td><a class="btn btn-sm btn-warning" href="">Update</a></td>
+                    <td><a class="btn btn-sm btn-danger" href="">Delete</a></td>
+                </tr>
+            {% endfor %}
+
+
+        </table>
+    </div>
+
+
+<br>
+
+
+
+<br>
+
+{% endblock %}
