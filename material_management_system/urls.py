@@ -41,4 +41,6 @@ urlpatterns = [
     path('bom_detail/<str:pk>/', views.bom_detail, name="bom_detail"),
     path('bom_back/<str:pk>/', views.bom_back, name="bom_back"),
     path('return_material/<str:pk1>/<str:pk2>/', views.return_material, name="return_material"),
+    path('return_material_update/<str:pk1>/<str:pk2>/', views.return_material_update, name="return_material_update"),
+
 ]

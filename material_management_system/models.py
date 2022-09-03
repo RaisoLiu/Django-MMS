@@ -77,9 +77,6 @@ class Material(models.Model):
         self.item.save()
 
 
-
-
-
 class BOM(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     description = models.CharField(max_length=200, blank=True)

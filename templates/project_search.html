@@ -14,7 +14,7 @@
                 <th>成本</th>
                 <th>專案詳情</th>
                 <th>專案更新</th>
-                <th>專案刪除</th>
+{#                <th>專案刪除</th>#}
             </tr>
             {% for it in project_set %}
                 <tr>
@@ -24,7 +24,7 @@
                     <td>{{ it.total_cost }}</td>
                     <td><a class="btn btn-sm btn-info" href="{% url 'project_detail' it.id %}">Detail</a></td>
                     <td><a class="btn btn-sm btn-warning" href="{% url 'update_project' it.id %}">Update</a></td>
-                    <td><a class="btn btn-sm btn-danger" href="{% url 'delete_project' it.id %}">Delete</a></td>
+{#                    <td><a class="btn btn-sm btn-danger" href="{% url 'delete_project' it.id %}">Delete</a></td>#}
                 </tr>
             {% endfor %}
 

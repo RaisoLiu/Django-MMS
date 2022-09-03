@@ -28,7 +28,7 @@
 					<td>{{material.unit_price}}</td>
 					<td>{{material.count}}</td>
 					<td>{{material.date_created}}</td>
-					<td><a class="btn btn-sm btn-warning" href="{% url 'update_material' material.id %}">Update</a></td>
+					<td><a class="btn btn-sm btn-warning" href="{% url 'return_material_update' material.id bomid%}">Update</a></td>
 
 					<td><a class="btn btn-sm btn-success" href="{% url 'return_material' material.id bomid %}">Return</a></td>
 				</tr>

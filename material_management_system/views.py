@@ -246,32 +246,43 @@ def new_bom(request, pk):
             p = 0.
             try:
                 item = Item.objects.get(ds_number=ds)
+                if item.free_count < qu:
+                    error += 1
+                    break
                 ms = item.material_set.all()
                 qnow = 0
                 for j in range(len(ms)):
-                    print('q now:', qnow)
                     m = ms[j]
+                    if m.is_free == "NO":
+                        continue
                     if qnow >= qu:
                         break
                     u = min(m.count, qu - qnow)
                     qnow += u
-                    m.use(u)
-                    m.save()
+                    # m.use(u)
+                    # m.save()
                     p += u * m.unit_price
                     material_list.append([m.id, u])
 
             except:
                 error += 1
+                break
             total_sum += p
-        project.total_cost += total_sum
-        project.save()
-        bom.cost = total_sum
-        bom.material_list = json.dumps(material_list)
-        bom.save()
-        print(bom)
-        print(bom.material_list)
+        if error == 1:
+            info = 'Material not enough!'
 
-        return redirect('/project_detail/' + str(pk))
+        else:
+            for it in material_list:
+                m = Material.objects.get(id=it[0])
+                m.use(it[1])
+                m.save()
+            project.total_cost += total_sum
+            project.save()
+            bom.cost = total_sum
+            bom.material_list = json.dumps(material_list)
+            bom.save()
+
+            return redirect('/project_detail/' + str(pk))
 
     context = {'info': info}
 
@@ -313,6 +324,8 @@ def materials_price(request):
                     it['color'] = 'table-info'
                 else:
                     it['color'] = 'table-warning'
+                    it['price'] = 0.
+                    error += 1
             except:
                 error += 1
 
@@ -321,7 +334,7 @@ def materials_price(request):
             mat_set.append(it)
 
         context["mat_set"] = mat_set
-        context["total_sum"] = total_sum
+        context["total_sum"] = int(total_sum)
         context["error"] = error
         print(len(context["mat_set"]))
     return render(request, 'materials_price.html', context)
@@ -403,3 +416,30 @@ def return_material(request, pk1, pk2):
     material.unuse()
     material.save()
     return redirect('/bom_back/' + pk2)
+
+
+@login_required(login_url='login')
+def return_material_update(request, pk1, pk2):
+    material = Material.objects.get(id=pk1)
+    item = material.item
+    form = MaterialForm(instance=material)
+    info = str()
+    if request.method == 'POST':
+        ori = material.count
+        form = MaterialForm(request.POST, instance=material)
+        if form.is_valid():
+            form.save()
+            if material.is_free == "YES":
+                item.add_material(Material.objects.get(id=pk1).count - ori)
+            else:
+                item.add_unavailable_material(Material.objects.get(id=pk1).count - ori)
+
+            item.save()
+            return redirect('/bom_back/' + str(pk2))
+
+        else:
+            print('data is not valid.')
+            info = 'data is not valid.'
+
+    context = {'form': form, 'info': info}
+    return render(request, 'update_material.html', context)

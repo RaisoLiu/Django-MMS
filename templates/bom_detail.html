@@ -3,27 +3,31 @@
 {% block content %}
 <div class="row">
 	<div class="col-md">
-		<div class="card card-body">
-			<h5>Description</h5>
+		<div class="card card-body align-items-center">
+			<h5>Project</h5>
+            <hr>
+            <p> {{bom.project}}</p>
+		</div>
+	</div>
+	<div class="col-md">
+		<div class="card card-body align-items-center">
+			<h5>BOM Description</h5>
+            <hr>
             <p> {{bom.description}}</p>
-			<hr>
-{#			<a class="btn btn-outline-info  btn-sm btn-block" href="">Update Customer</a>#}
-{#			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'create_order' customer.id %}">Place Order</a>#}
-
 		</div>
 	</div>
 
 	<div class="col-md">
-		<div class="card card-body">
-			<h5>date_created</h5>
+		<div class="card card-body align-items-center">
+			<h5>新增日期</h5>
 			<hr>
 			<p> {{bom.date_created}}</p>
 		</div>
 	</div>
 
 	<div class="col-md">
-		<div class="card card-body">
-			<h5>date_created</h5>
+		<div class="card card-body align-items-center">
+			<h5>合計</h5>
 			<hr>
 			<h1 style="text-align: center;padding: 10px">{{bom.cost}}</h1>
 		</div>
