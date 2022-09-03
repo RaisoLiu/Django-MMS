@@ -36,6 +36,11 @@ class Item(models.Model):
         self.free_count += val
         return
 
+    def use_material(self, val):
+        self.free_count -= val
+        self.unavailable_count += val
+        return
+
 
 class Material(models.Model):
     STATUS = (
@@ -53,13 +58,20 @@ class Material(models.Model):
     #     self.item.add_material(self.count)
 
     def __str__(self):
-        return str(self.item) + ' ' + self.random_str
+        return str(self.item.ds_number) + ' ' + self.random_str
+
+    def use(self, val):
+        self.is_free = "NO"
+        self.count -= val
+        self.item.add_material(-val)
+        self.item.use_material(self.count)
+        self.item.save()
 
 
 class BOM(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     description = models.CharField(max_length=200, blank=True)
-    material = models.ManyToManyField(Material)
+    material_list = models.TextField(blank=True, null=True)
     cost = models.FloatField(default=.0)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 

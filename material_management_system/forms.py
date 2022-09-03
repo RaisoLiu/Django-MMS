@@ -46,9 +46,6 @@ class ProjectForm(ModelForm):
         exclude = ['total_cost', 'date_created']
 
 
-class BOMForm(ModelForm):
+class NEWBOMForm(forms.Form):
+    description = forms.CharField(max_length=200)
 
-    class Meta:
-        model = BOM
-        fields = '__all__'
-        exclude = ['cost', 'date_created']

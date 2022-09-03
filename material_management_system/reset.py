@@ -16,7 +16,6 @@ for it in model_list:
 BASE_DIR = os.getcwd()
 EXCEL_DIR = os.path.join(BASE_DIR, 'material_management_system', 'excel')
 
-
 excel = 'CAP.xlsx'
 
 lib_ref_col = "LibRef"
@@ -91,7 +90,6 @@ for page in range(len(page_list)):
         material.save()
         item.add_material(c)
         item.save()
-
 
 excel = 'RES.xlsx'
 
@@ -223,7 +221,6 @@ for page in range(len(page_list)):
         item.add_material(c)
         item.save()
 
-
 excel = 'DIO.xlsx'
 
 lib_ref_col = "LibRef"
@@ -294,5 +291,5 @@ for page in range(len(page_list)):
         item.add_material(c)
         item.save()
 
-
-
+project = Project(name="P1", description="D1", user_created="PM1")
+project.save()

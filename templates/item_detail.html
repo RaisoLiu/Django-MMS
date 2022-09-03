@@ -46,6 +46,7 @@
 		<div class="card card-body">
 			<table class="table table-sm">
 				<tr>
+                    <th>Status</th>
 					<th>材料編號</th>
 					<th>單價</th>
 					<th>可用數量</th>
@@ -57,6 +58,7 @@
 				{% for material in material_set %}
 
 				<tr>
+                    <td>{{material.is_free}}</td>
 					<td>{{material}}</td>
 					<td>{{material.unit_price}}</td>
 					<td>{{material.count}}</td>

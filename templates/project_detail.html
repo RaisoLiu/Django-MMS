@@ -1,12 +1,14 @@
 {% extends 'main.html' %}
 
 {% block content %}
+    <div class="container">
 <div class="row">
 	<div class="col-md">
 		<div class="card card-body">
 			<h5>專案名稱</h5>
-            <p> {{project.name}}</p>
-			<hr>
+            <hr>
+            <h1 style="text-align: center;padding: 10px">{{project.name}}</h1>
+
 {#			<a class="btn btn-outline-info  btn-sm btn-block" href="">Update Customer</a>#}
 {#			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'create_order' customer.id %}">Place Order</a>#}
 
@@ -17,7 +19,7 @@
 		<div class="card card-body">
 			<h5>Information</h5>
 			<hr>
-			<p> {{project.description}}</p>
+            <h5 style="text-align: center;padding: 10px">{{project.description}}</h5>
 		</div>
 	</div>
 
@@ -38,7 +40,7 @@
 		</div>
     </div>
 </div>
-
+    </div>
 
 <br>
 
@@ -51,8 +53,7 @@
 					<th>成本</th>
 					<th>建立日期</th>
                     <th>Detail</th>
-					<th>Update</th>
-					<th>Remove</th>
+					<th>餘料入庫</th>
 				</tr>
 
 				{% for bom in bom_set %}
@@ -61,9 +62,8 @@
 					<td>{{bom.description}}</td>
 					<td>{{bom.cost}}</td>
                     <td>{{bom.date_created}}</td>
-                    <td><a class="btn btn-sm btn-info" href="">Detail</a></td>
-					<td><a class="btn btn-sm btn-warning" href="">Update</a></td>
-					<td><a class="btn btn-sm btn-danger" href="">Delete</a></td>
+                    <td><a class="btn btn-sm btn-info" href="{% url 'bom_detail' bom.id %}">Detail</a></td>
+{#					<td><a class="btn btn-sm btn-warning" href="{% url 'bom_back' bom.id %}">Material BACK</a></td>#}
 				</tr>
 				{% endfor %}
 

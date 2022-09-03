@@ -1,0 +1,70 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Description</h5>
+            <p> {{bom.description}}</p>
+			<hr>
+{#			<a class="btn btn-outline-info  btn-sm btn-block" href="">Update Customer</a>#}
+{#			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'create_order' customer.id %}">Place Order</a>#}
+
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>date_created</h5>
+			<hr>
+			<p> {{bom.date_created}}</p>
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>date_created</h5>
+			<hr>
+			<h1 style="text-align: center;padding: 10px">{{bom.cost}}</h1>
+		</div>
+
+	</div>
+
+</div>
+
+
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>材料編號</th>
+					<th>單價</th>
+					<th>使用量</th>
+                    <th>總價</th>
+                    <th>剩餘</th>
+
+				</tr>
+
+				{% for material in material_set %}
+
+				<tr>
+					<td>{{material.name}}</td>
+					<td>{{material.unit_price}}</td>
+					<td>{{material.use_quantity}}</td>
+					<td>{{material.sum}}</td>
+                    <td>{{material.remaining}}</td>
+				</tr>
+				{% endfor %}
+
+			</table>
+		</div>
+	</div>
+</div>
+
+
+
+
+{% endblock %}

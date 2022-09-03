@@ -1,3 +1,4 @@
+import json
 import random
 import string
 
@@ -219,18 +220,55 @@ def new_project(request):
 @login_required(login_url='login')
 def new_bom(request, pk):
     project = Project.objects.get(id=pk)
-    bom_form = BOMForm(initial={'project': project})
     info = str()
     if request.method == 'POST':
-        bom_form = BOMForm(request.POST)
-        if bom_form.is_valid():
-            bom_form.save()
-            return redirect('/project_detail/' + str(pk))
-        else:
-            print('data is not valid.')
-            info = 'data is not valid.'
+        print(request.POST, request.FILES)
+        # form = NEWBOMForm(request.POST)
+        excel_file = request.FILES["excel_file"]
+        d = request.POST["description"]
+        # print(d)
+        # print(excel_file)
+        # print(df)
+        # print(len(df))
+        df = pd.read_excel(excel_file, skiprows=8, skipfooter=2)
+        bom = BOM(project=project, description=d)
+        material_list = []
+        total_sum = 0.
+        error = 0
+        for i in range(len(df)):
+            ds = df.iloc[i]['PartNumber']
+            qu = int(df.iloc[i]['Quantity'])
+            p = 0.
+            try:
+                item = Item.objects.get(ds_number=ds)
+                ms = item.material_set.all()
+                qnow = 0
+                for j in range(len(ms)):
+                    print('q now:', qnow)
+                    m = ms[j]
+                    if qnow >= qu:
+                        break
+                    u = min(m.count, qu - qnow)
+                    qnow += u
+                    m.use(u)
+                    m.save()
+                    p += u * m.unit_price
+                    material_list.append([m.id, u])
 
-    context = {'form': bom_form, 'info': info}
+            except:
+                error += 1
+            total_sum += p
+        project.total_cost += total_sum
+        project.save()
+        bom.cost = total_sum
+        bom.material_list = json.dumps(material_list)
+        bom.save()
+        print(bom)
+        print(bom.material_list)
+
+        return redirect('/project_detail/'+str(pk))
+
+    context = {'info': info}
 
     return render(request, 'new_bom.html', context)
 
@@ -244,6 +282,7 @@ def material_detail_search(request):
 def materials_price(request):
     context = {}
     if request.method == 'POST':
+        print(request.POST, request.FILES)
         excel_file = request.FILES["excel_file"]
         df = pd.read_excel(excel_file, skiprows=8, skipfooter=2)
         mat_set = []
@@ -318,3 +357,23 @@ def project_detail(request, pk):
     bom_set = project.bom_set.all()
     context = {'bom_set': bom_set, 'project': project}
     return render(request, 'project_detail.html', context)
+
+
+def bom_detail(request, pk):
+    bom = BOM.objects.get(id=pk)
+    material_set_json = json.loads(bom.material_list)
+    material_set = []
+    for it in material_set_json:
+        obj = Material.objects.get(id=it[0])
+        mat = {
+            "name": str(obj),
+            "unit_price": obj.unit_price,
+            "use_quantity": it[1],
+            "sum": obj.unit_price * it[1],
+            "remaining": obj.count,
+        }
+        material_set.append(mat)
+    print(material_set)
+    context = {'material_set': material_set, 'bom': bom}
+
+    return render(request, 'bom_detail.html', context)
