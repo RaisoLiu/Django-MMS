@@ -38,5 +38,7 @@ urlpatterns = [
     path('update_project/<str:pk>/', views.update_project, name="update_project"),
     path('delete_project/<str:pk>/', views.delete_project, name="delete_project"),
     path('new_bom/<str:pk>/', views.new_bom, name="new_bom"),
-    path('bom_detail/<str:pk>/', views.bom_detail, name="bom_detail")
+    path('bom_detail/<str:pk>/', views.bom_detail, name="bom_detail"),
+    path('bom_back/<str:pk>/', views.bom_back, name="bom_back"),
+    path('return_material/<str:pk1>/<str:pk2>/', views.return_material, name="return_material"),
 ]

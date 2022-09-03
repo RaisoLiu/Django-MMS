@@ -8,6 +8,7 @@ import pandas as pd
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.forms import inlineformset_factory, modelformset_factory
 from django.shortcuts import render, redirect
 from .filters import *
 from .models import *
@@ -151,7 +152,11 @@ def update_material(request, pk):
         form = MaterialForm(request.POST, instance=material)
         if form.is_valid():
             form.save()
-            item.add_material(Material.objects.get(id=pk).count - ori)
+            if material.is_free == "YES":
+                item.add_material(Material.objects.get(id=pk).count - ori)
+            else:
+                item.add_unavailable_material(Material.objects.get(id=pk).count - ori)
+
             item.save()
             return redirect('/item_detail/' + str(item.id))
 
@@ -266,7 +271,7 @@ def new_bom(request, pk):
         print(bom)
         print(bom.material_list)
 
-        return redirect('/project_detail/'+str(pk))
+        return redirect('/project_detail/' + str(pk))
 
     context = {'info': info}
 
@@ -359,6 +364,7 @@ def project_detail(request, pk):
     return render(request, 'project_detail.html', context)
 
 
+@login_required(login_url='login')
 def bom_detail(request, pk):
     bom = BOM.objects.get(id=pk)
     material_set_json = json.loads(bom.material_list)
@@ -373,7 +379,27 @@ def bom_detail(request, pk):
             "remaining": obj.count,
         }
         material_set.append(mat)
-    print(material_set)
     context = {'material_set': material_set, 'bom': bom}
 
     return render(request, 'bom_detail.html', context)
+
+
+@login_required(login_url='login')
+def bom_back(request, pk):
+    bom = BOM.objects.get(id=pk)
+    material_set_json = json.loads(bom.material_list)
+    matid = []
+    info = ""
+    for it in material_set_json:
+        matid.append(it[0])
+    material_set = Material.objects.filter(id__in=matid)
+
+    context = {'material_set': material_set, 'info': info, 'bomid': pk}
+    return render(request, 'bom_back.html', context)
+
+
+def return_material(request, pk1, pk2):
+    material = Material.objects.get(id=pk1)
+    material.unuse()
+    material.save()
+    return redirect('/bom_back/' + pk2)

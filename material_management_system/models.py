@@ -36,6 +36,10 @@ class Item(models.Model):
         self.free_count += val
         return
 
+    def add_unavailable_material(self, val):
+        self.unavailable_count += val
+        return
+
     def use_material(self, val):
         self.free_count -= val
         self.unavailable_count += val
@@ -66,6 +70,14 @@ class Material(models.Model):
         self.item.add_material(-val)
         self.item.use_material(self.count)
         self.item.save()
+
+    def unuse(self):
+        self.is_free = "YES"
+        self.item.use_material(-self.count)
+        self.item.save()
+
+
+
 
 
 class BOM(models.Model):

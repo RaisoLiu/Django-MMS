@@ -20,6 +20,7 @@ class MaterialForm(ModelForm):
     class Meta:
         model = Material
         fields = '__all__'
+        exclude = ['is_free']
 
 
 class NewGroupMaterialForm(forms.Form):
