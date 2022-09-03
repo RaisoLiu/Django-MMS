@@ -10,12 +10,7 @@
 			<form action="" method="POST">
 				{% csrf_token %}
             <table class="table table-sm">
-{#                {% for it in form %}#}
-{#                    <tr>#}
-{#                    <td>{{ it.label }}</td>#}
-{#                    <td>{{ it }}</td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
+
 				{{form}}
             </table>
 				<input type="submit" name="Submit">

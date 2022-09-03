@@ -33,7 +33,6 @@ def loginPage(request):
         return render(request, 'login.html', context)
 
 
-
 @login_required(login_url='login')
 def logoutUser(request):
     logout(request)
@@ -246,23 +245,40 @@ def materials_price(request):
     context = {}
     if request.method == 'POST':
         excel_file = request.FILES["excel_file"]
-
-        print(excel_file, type(excel_file))
         df = pd.read_excel(excel_file, skiprows=8, skipfooter=2)
-        libref_li = np.array(df['LibRef'])
-        ds_number_li = np.array(df['PartNumber'])
-        quantity_li = np.array(df['Quantity'])
-        no_li = np.array(df['#'])
         mat_set = []
-        for i in range(len(libref_li)):
+        total_sum = 0.
+        error = 0
+        for i in range(len(df)):
             it = dict()
-            it['lib_ref'] = libref_li[i]
-            it['ds_number'] = ds_number_li[i]
-            it['quantity'] = quantity_li[i]
-            it['no'] = no_li[i]
+            itt = df.iloc[i]
+            # print(itt)
+            it['no'] = itt['#']
+            it['lib_ref'] = itt['LibRef']
+            it['ds_number'] = itt['PartNumber']
+            it['quantity'] = itt['Quantity']
+            item = Item()
+            it['color'] = 'table-danger'
+            it['price'] = 0.0
+            try:
+                item = Item.objects.get(ds_number=it['ds_number'])
+                ms = item.material_set.all()
+                for m in ms:
+                    it['price'] = max(it['price'], m.unit_price)
+                if item.free_count >= it['quantity']:
+                    it['color'] = 'table-info'
+                else:
+                    it['color'] = 'table-warning'
+            except:
+                error += 1
+
+            it['sum'] = it['price'] * it['quantity']
+            total_sum += it['sum']
             mat_set.append(it)
 
         context["mat_set"] = mat_set
+        context["total_sum"] = total_sum
+        context["error"] = error
         print(len(context["mat_set"]))
     return render(request, 'materials_price.html', context)
 

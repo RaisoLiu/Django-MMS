@@ -21,8 +21,6 @@ class Item(models.Model):
     lib_ref = models.CharField(max_length=50, blank=True)
     ds_number = models.CharField(max_length=20, unique=True)
     part_number = models.CharField(max_length=50, null=True, blank=True)
-    # manufacturer = models.CharField(max_length=50, null=True, blank=True)
-    # footprint = models.CharField(max_length=20, null=True, blank=True)
     location = models.CharField(max_length=200, null=True, blank=True)
     expected_count = models.IntegerField(null=True)
     feature = models.TextField(blank=True, null=True)
